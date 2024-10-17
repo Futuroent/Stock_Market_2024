@@ -3,6 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+import joblib
+import os
+import numpy as np
+
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 def download_stock_data(ticker, start_date, end_date):
