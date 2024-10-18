@@ -26,8 +26,8 @@ class LSTMModel(nn.Module):
         return out
 
 # Relative path to model and scaler
-model_relative_path = './models/lstm_stock_model2.pth'  
-scaler_relative_path = './models/scaler.pkl'  
+model_relative_path = '../models/lstm_stock_model2.pth'  
+scaler_relative_path = '../models/scaler.pkl'  
 
 # Load the trained model's state_dict and the scaler
 ridge_model = LSTMModel()
