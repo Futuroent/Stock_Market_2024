@@ -366,6 +366,9 @@ toml @ file:///tmp/build/80754af9/toml_1616166611790/work
 tomli @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/tomli_1699237289925/work
 tomlkit @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/tomlkit_1699238737474/work
 toolz @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/toolz_1699238160466/work
+torch==2.4.1
+torchaudio==2.4.1
+torchvision==0.19.1
 tornado @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_a4w03z48br/croot/tornado_1718740114858/work
 tqdm @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_f76_dxtcsh/croot/tqdm_1716395948224/work
 traitlets @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_500m2_1wyk/croot/traitlets_1718227071952/work
