@@ -6,7 +6,6 @@ from torch import nn
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 
-
 # Define the LSTM-based model architecture
 class LSTMModel(nn.Module):
     def __init__(self):
@@ -54,12 +53,6 @@ def predict_stock_ridge(features):
     return prediction.item()  # Convert the tensor to a scalar
 
 # Streamlit app layout
-
-# Define the stock prediction function
-def predict_stock_ridge(input_features):
-    # Dummy function for prediction, replace this with your actual model
-    return sum(input_features) * 1.5  # Just a placeholder calculation
-
 def main():
     st.title('📈 Stock Price Predictor Pro (LSTM Model)')
 
