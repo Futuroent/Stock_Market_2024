@@ -5,6 +5,7 @@ import torch
 from torch import nn
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
+import os
 
 # Define the LSTM-based model architecture
 class LSTMModel(nn.Module):
@@ -24,17 +25,24 @@ class LSTMModel(nn.Module):
         out = self.fc(lstm_out)
         return out
 
-# Load model and scaler
-ridge_model_path = '../models/lstm_stock_model2.pth'  
-scaler_path = '../models/scaler.pkl'  
+# Relative path to model and scaler
+model_relative_path = './models/lstm_stock_model2.pth'  
+scaler_relative_path = './models/scaler.pkl'  
 
 # Load the trained model's state_dict and the scaler
 ridge_model = LSTMModel()
-ridge_model.load_state_dict(torch.load(ridge_model_path))  
-ridge_model.eval() 
 
-# Load the scaler for input data
-stock_scaler = joblib.load(scaler_path)
+# Check if model and scaler exist
+if not os.path.exists(model_relative_path):
+    st.error(f"Model file not found at: {model_relative_path}")
+else:
+    ridge_model.load_state_dict(torch.load(model_relative_path, map_location=torch.device('cpu')))
+    ridge_model.eval()
+
+if not os.path.exists(scaler_relative_path):
+    st.error(f"Scaler file not found at: {scaler_relative_path}")
+else:
+    stock_scaler = joblib.load(scaler_relative_path)
 
 # Function to make stock price predictions using the model
 def predict_stock_ridge(features):
