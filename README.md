@@ -1,6 +1,6 @@
 
 # Apple Stock Performance & Sentiment Analysis
-![Apple Stock and Sentiment Analysis](https://github.com/Futuroent/Stock_Market_2024/blob/main/captrader_markttechnik_trade_3.webp)
+![Apple Stock and Sentiment Analysis](https://github.com/Futuroent/Stock_Market_2024/blob/main/captrader_markttechnik_trade_3.jpeg)
 
 
 ## Project Overview
