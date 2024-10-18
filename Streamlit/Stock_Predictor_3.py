@@ -5,10 +5,6 @@ import torch
 from torch import nn
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
-import os
-
-# Get the absolute path of the directory where the script is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Define the LSTM-based model architecture
 class LSTMModel(nn.Module):
@@ -28,20 +24,14 @@ class LSTMModel(nn.Module):
         out = self.fc(lstm_out)
         return out
 
-# Construct the full paths to the model and scaler files
-ridge_model_path = os.path.join(BASE_DIR, 'models', 'lstm_stock_model2.pth')
-scaler_path = os.path.join(BASE_DIR, 'models', 'scaler.pkl')
-
-# Diagnostic outputs
-st.write(f"Model path: {ridge_model_path}")
-st.write(f"Model file exists: {os.path.exists(ridge_model_path)}")
-st.write(f"Scaler path: {scaler_path}")
-st.write(f"Scaler file exists: {os.path.exists(scaler_path)}")
+# Load model and scaler
+ridge_model_path = '../models/lstm_stock_model2.pth'  
+scaler_path = '../models/scaler.pkl'  
 
 # Load the trained model's state_dict and the scaler
 ridge_model = LSTMModel()
-ridge_model.load_state_dict(torch.load(ridge_model_path, map_location=torch.device('cpu')))
-ridge_model.eval()
+ridge_model.load_state_dict(torch.load(ridge_model_path))  
+ridge_model.eval() 
 
 # Load the scaler for input data
 stock_scaler = joblib.load(scaler_path)
