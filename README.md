@@ -1,126 +1,129 @@
-# Apple Stock Performance & Sentiment Analysis
 
-## Projektübersicht
- 
-Dieses Projekt analysiert die Performance der Apple-Aktie (AAPL) in einem bestimmten Zeitraum und stellt diese Daten im Vergleich zu Sentiment-Analysen von Nachrichtenartikeln dar. Ziel des Projekts ist es, visuelle Einblicke in die Aktienperformance von Apple zu gewinnen und zu untersuchen, wie die Nachrichtenlage die Aktienbewegungen beeinflusst. Die Ergebnisse werden in **Tableau** visualisiert, um interaktive Dashboards zu erstellen, die für Investoren und Marktanalysten hilfreich sind.
+# Apple Stock Performance & Sentiment Analysis
+![Apple Stock and Sentiment Analysis](https://github.com/Futuroent/Stock_Market_2024/blob/main/captrader_markttechnik_trade_3.webp)
+
+
+## Project Overview
+
+This project analyzes the performance of **Apple's stock (AAPL)** over a specified period and compares it with sentiment analysis from news articles. The aim is to gain visual insights into Apple's stock performance and investigate how news sentiment impacts stock movements. The results are visualized using **Tableau**, creating interactive dashboards that can be useful for investors and market analysts.
 
 ## Motivation
 
-Die Idee hinter diesem Projekt ist es, die Zusammenhänge zwischen Nachrichten-Sentiment und Aktienbewegungen zu verstehen. Besonders bei großen Tech-Firmen wie Apple kann die Berichterstattung in den Medien einen großen Einfluss auf die Performance der Aktie haben. Durch die Verknüpfung von Nachrichtenartikeln mit ihrer Sentiment-Analyse und den entsprechenden Aktienkursbewegungen können Trends und Einflussfaktoren erkannt werden.
+The idea behind this project is to understand the relationship between **news sentiment** and **stock movements**. For large tech companies like Apple, media coverage can have a significant influence on stock performance. By linking news articles with sentiment analysis and corresponding stock price movements, trends and potential influencing factors can be identified.
 
 ## Features
 
-- **Datenquellen**:
-  - Historische Apple-Aktienkurse von [Yahoo Finance](https://finance.yahoo.com).
-  - Nachrichtenartikel über Apple aus verschiedenen Quellen via News API.
-  - Sentiment-Analyse der Artikel mit Hilfe eines auf Finanznachrichten spezialisierten Modells.
+- **Data Sources**:
+  - Historical Apple stock prices from [Yahoo Finance](https://finance.yahoo.com).
+  - News articles about Apple from various sources via the **News API**.
+  - Sentiment analysis of the articles using a financial sentiment model.
 
-- **Dashboards in Tableau**:
-  - **Stock Price Over Time**: Ein Dashboard, das die Entwicklung des Aktienkurses über verschiedene Zeiträume zeigt (Monate, Quartale, Jahre).
-  - **Sentiment Analysis Impact**: Eine Übersicht der Nachrichten und ihrer Sentiment-Wertung im Vergleich zu den entsprechenden Aktienkursen.
-  - **Volume vs. Price**: Eine Korrelation zwischen Handelsvolumen und Aktienkursen, um mögliche Volatilitäten zu analysieren.
-  - **Real-Time Updates**: Das System kann stündlich real-time Daten über die Apple-Aktie und aktuelle Nachrichten sammeln und in einem separaten Dashboard visualisieren.
+- **Tableau Dashboards**:
+  - **Stock Price Over Time**: A dashboard showing stock price trends over various time periods (months, quarters, years).
+  - **Sentiment Analysis Impact**: An overview of news and their sentiment scores, compared with corresponding stock prices.
+  - **Volume vs. Price**: A correlation between trading volume and stock prices to analyze potential volatility.
+  - **Real-Time Updates**: The system can collect real-time data on Apple stock and sentiment updates hourly and visualize it in a separate dashboard.
 
-## Verwendete Technologien
+## Technologies Used
 
-- **Programmiersprache**: Python
-- **Datenquellen**: 
-  - Yahoo Finance API für historische Aktienkurse
-  - News API für Nachrichtenartikel
-  - Hugging Face Transformers (Modell zur Sentiment-Analyse)
-- **Datenbank**: SQLite zur Speicherung der Sentiment-Daten und Aktienkurse.
-- **Visualisierungstool**: Tableau
+- **Programming Language**: Python
+- **Data Sources**: 
+  - **Yahoo Finance API** for historical stock prices.
+  - **News API** for gathering news articles.
+  - **Hugging Face Transformers** for sentiment analysis.
+- **Database**: SQLite for storing sentiment and stock data.
+- **Visualization Tool**: Tableau
 
 ## Setup & Installation
 
-### 1. Voraussetzungen
+### 1. Requirements
 
-Um dieses Projekt auszuführen, benötigst du die folgenden Abhängigkeiten:
+To run this project, you need the following dependencies:
 - **Python 3.x**
-- **Tableau Public** (kostenloser Tableau-Desktop für Visualisierung)
-- **Pandas**: Für die Datenbearbeitung
-- **SQLite**: Zum Speichern der Daten
-- **Yahoo Finance API**: Für den Abruf der Aktienkurse
-- **News API**: Für den Abruf der Nachrichtenartikel
-- **Hugging Face Transformers**: Für die Sentiment-Analyse
+- **Tableau Public** (free desktop tool for visualization)
+- **Pandas**: For data manipulation
+- **SQLite**: For data storage
+- **Yahoo Finance API**: To collect stock prices
+- **News API**: To fetch news articles
+- **Hugging Face Transformers**: For sentiment analysis
 
-Du kannst die erforderlichen Python-Bibliotheken mit folgendem Befehl installieren:
+You can install the required Python libraries using the following command:
 
 ```bash
 pip install pandas yfinance sqlite3 requests transformers
 ```
 
-### 2. Projektinstallation
+### 2. Project Installation
 
-1. Klone dieses Repository auf deinen lokalen Computer:
+1. Clone this repository to your local machine:
 
    ```bash
    git clone <repository_url>
    ```
 
-2. Wechsel in das Projektverzeichnis:
+2. Navigate to the project directory:
 
    ```bash
    cd apple-stock-sentiment-analysis
    ```
 
-3. Installiere die notwendigen Abhängigkeiten:
+3. Install the required dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Richte die SQLite-Datenbank ein:
+4. Set up the SQLite database:
 
    ```bash
    python setup_database.py
    ```
 
-5. Starte die Python-Skripte, um Daten zu sammeln und zu analysieren:
+5. Run the Python scripts to collect stock data and perform sentiment analysis:
 
    ```bash
    python collect_stock_data.py
    python sentiment_analysis.py
    ```
 
-6. Öffne die Tableau-Dateien (`*.twbx`), um die Dashboards zu visualisieren und interaktiv zu erkunden.
+6. Open the Tableau files (`*.twbx`) to visualize the dashboards and explore the data interactively.
 
-## Datenquellen
+## Data Sources
 
-- **AAPL Stock Data**: Die Aktienkurse werden mithilfe der Yahoo Finance API abgerufen. Hier werden Kursdaten, wie "Open", "Close", "High", "Low" und "Volume", gespeichert.
-- **Sentiment Data**: Nachrichten über Apple werden über die News API gesammelt und mithilfe eines Sentiment-Modells analysiert, das die Stimmung als positiv, negativ oder neutral klassifiziert.
+- **Apple Stock Data**: Stock prices are retrieved using the Yahoo Finance API. Key fields include "Open", "Close", "High", "Low", and "Volume".
+- **Sentiment Data**: News articles about Apple are gathered using the News API, and a sentiment model classifies the sentiment as positive, negative, or neutral.
 
 ## Tableau Dashboards
 
 ### 1. **Stock Price Over Time**
-   - **Daten**: AAPL Stock Data (Adj Close)
-   - **X-Achse**: Zeitachse (Jahre, Quartale, Monate)
-   - **Y-Achse**: Angepasster Schlusskurs (Adj Close)
-   - **Beschreibung**: Dieses Dashboard visualisiert die Entwicklung des Apple-Aktienkurses über einen festgelegten Zeitraum. Es zeigt Trends und wichtige Punkte im Zeitverlauf.
+   - **Data**: AAPL stock data (Adj Close)
+   - **X-Axis**: Time axis (Years, Quarters, Months)
+   - **Y-Axis**: Adjusted closing price (Adj Close)
+   - **Description**: This dashboard visualizes Apple’s stock price performance over time, highlighting trends and important points.
 
 ### 2. **Sentiment Analysis Impact**
-   - **Daten**: Sentiment-Daten, AAPL Stock Data
-   - **X-Achse**: Datum
-   - **Y-Achse**: Aktienkurs (Adj Close)
-   - **Beschreibung**: Dieses Dashboard vergleicht die Stimmungen von Nachrichtenartikeln mit den Kursbewegungen. Es zeigt, wie positive, negative oder neutrale Nachrichten den Aktienkurs beeinflusst haben.
+   - **Data**: Sentiment data and AAPL stock data
+   - **X-Axis**: Date
+   - **Y-Axis**: Stock price (Adj Close)
+   - **Description**: This dashboard compares sentiment from news articles with stock price movements, showing how positive, negative, or neutral news impacted the stock price.
 
 ### 3. **Volume vs. Price**
-   - **Daten**: AAPL Stock Data
-   - **X-Achse**: Handelsvolumen (Volume)
-   - **Y-Achse**: Aktienkurs (Adj Close)
-   - **Beschreibung**: Hier wird die Korrelation zwischen Handelsvolumen und Aktienkurs visualisiert. Dieses Dashboard ist nützlich, um Spitzen im Volumen zu identifizieren und ihre Auswirkungen auf den Preis zu analysieren.
+   - **Data**: AAPL stock data
+   - **X-Axis**: Trading volume
+   - **Y-Axis**: Stock price (Adj Close)
+   - **Description**: This dashboard visualizes the correlation between trading volume and stock price. It helps identify periods of high volume and analyze their impact on price movements.
 
 ### 4. **Real-Time Updates**
-   - **Daten**: Echtzeit-Daten von Yahoo Finance und Sentiment-Analysen.
-   - **Beschreibung**: Dieses Dashboard aktualisiert stündlich und zeigt die aktuellen Kursbewegungen und Nachrichten-Sentiments in Echtzeit an. Es ist besonders nützlich, um kurzfristige Trends zu erkennen.
+   - **Data**: Real-time data from Yahoo Finance and sentiment analysis
+   - **Description**: This dashboard updates hourly and displays the latest stock movements and sentiment analysis. It’s particularly useful for spotting short-term trends.
 
-## Weitere Entwicklungen
+## Future Developments
 
-In zukünftigen Iterationen könnte das Projekt um weitere Funktionen erweitert werden:
-- **Erweiterung der API**: Hinzufügen von zusätzlichen Nachrichtenquellen und Aktien, um breitere Marktanalysen zu ermöglichen.
-- **Vorhersagemodelle**: Implementierung von Machine Learning-Modellen zur Vorhersage von Aktienbewegungen basierend auf Nachrichtenstimmung.
-- **Optimierte Dashboards**: Erweiterung der Interaktivität und Datenvisualisierungen.
+In future iterations, the project could be expanded to include:
+- **API Expansion**: Adding more news sources and stock data to enable broader market analysis.
+- **Prediction Models**: Implementing machine learning models to predict stock movements based on sentiment.
+- **Enhanced Dashboards**: Improving interactivity and visualizations.
 
-## Fazit
+## Conclusion
 
-Dieses Projekt bietet eine umfassende Analyse der Apple-Aktienkurse im Vergleich zu Nachrichten-Sentiments und zeigt auf, wie Nachrichten die Kursentwicklung beeinflussen können. Es stellt sowohl langfristige Trends als auch Echtzeitdaten bereit und ermöglicht es den Benutzern, tiefere Einblicke in die Faktoren zu gewinnen, die Aktienkurse beeinflussen.
+This project provides a comprehensive analysis of Apple’s stock performance in relation to news sentiment. It highlights both long-term trends and real-time data, allowing users to gain deeper insights into the factors driving stock prices.
