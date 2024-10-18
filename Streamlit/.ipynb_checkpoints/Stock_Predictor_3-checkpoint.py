@@ -6,6 +6,7 @@ from torch import nn
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 
+
 # Define the LSTM-based model architecture
 class LSTMModel(nn.Module):
     def __init__(self):
@@ -53,56 +54,67 @@ def predict_stock_ridge(features):
     return prediction.item()  # Convert the tensor to a scalar
 
 # Streamlit app layout
-st.title('📈 Stock Price Predictor Pro (LSTM Model)')
 
-st.write("""
-### Predict the stock closing price using the trained LSTM model.
-Enter the relevant stock market data below to get a prediction:
-""")
+# Define the stock prediction function
+def predict_stock_ridge(input_features):
+    # Dummy function for prediction, replace this with your actual model
+    return sum(input_features) * 1.5  # Just a placeholder calculation
 
-# Date selection for stock prediction
-date = st.date_input("Select the date for prediction", datetime.today())
-st.write(f"Selected Date: {date.strftime('%Y-%m-%d')}")
+def main():
+    st.title('📈 Stock Price Predictor Pro (LSTM Model)')
 
-# Input fields for stock features
-daily_return = st.slider('Daily Return', min_value=-1.0, max_value=1.0, step=0.01, value=0.0)
-moving_avg_20 = st.slider('20-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-moving_avg_50 = st.slider('50-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-volume = st.number_input('Volume', min_value=0, value=1000000, step=10000)
-ema_50 = st.slider('EMA 50', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-rsi = st.slider('RSI (Relative Strength Index)', min_value=0.0, max_value=100.0, step=1.0, value=50.0)
-bollinger_high = st.slider('Bollinger High', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-bollinger_low = st.slider('Bollinger Low', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
+    st.write("""
+    ### Predict the stock closing price using the trained LSTM model.
+    Enter the relevant stock market data below to get a prediction:
+    """)
 
-# Collect all input features
-input_features = [daily_return, moving_avg_20, moving_avg_50, volume, ema_50, rsi, bollinger_high, bollinger_low]
+    # Date selection for stock prediction
+    date = st.date_input("Select the date for prediction", datetime.today())
+    st.write(f"Selected Date: {date.strftime('%Y-%m-%d')}")
 
-# Add a horizontal line for separation
-st.write("---")
+    # Input fields for stock features
+    daily_return = st.slider('Daily Return', min_value=-1.0, max_value=1.0, step=0.01, value=0.0)
+    moving_avg_20 = st.slider('20-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
+    moving_avg_50 = st.slider('50-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
+    volume = st.number_input('Volume', min_value=0, value=1000000, step=10000)
+    ema_50 = st.slider('EMA 50', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
+    rsi = st.slider('RSI (Relative Strength Index)', min_value=0.0, max_value=100.0, step=1.0, value=50.0)
+    bollinger_high = st.slider('Bollinger High', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
+    bollinger_low = st.slider('Bollinger Low', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
 
-# Button for making predictions
-if st.button('📊 Predict Stock Price'):
-    # Make prediction using the function
-    prediction = predict_stock_ridge(input_features)
-    st.success(f"Predicted Stock Closing Price on {date.strftime('%Y-%m-%d')}: ${prediction:.2f}")
-    
-    # Display summary of the input features
-    st.write(f"### Summary of Input Features:")
-    st.write({
-        'Daily Return': daily_return,
-        '20-Day MA': moving_avg_20,
-        '50-Day MA': moving_avg_50,
-        'Volume': volume,
-        'EMA 50': ema_50,
-        'RSI': rsi,
-        'Bollinger High': bollinger_high,
-        'Bollinger Low': bollinger_low
-    })
-else:
-    st.info("Please fill in the stock features and click 'Predict Stock Price'")
+    # Collect all input features
+    input_features = [daily_return, moving_avg_20, moving_avg_50, volume, ema_50, rsi, bollinger_high, bollinger_low]
 
-# Footer Disclaimer
-st.write("""
-#### Disclaimer:
-This is a demo app for educational purposes only and should not be used for actual financial decision-making.
-""")
+    # Add a horizontal line for separation
+    st.write("---")
+
+    # Button for making predictions
+    if st.button('📊 Predict Stock Price'):
+        # Make prediction using the function
+        prediction = predict_stock_ridge(input_features)
+        st.success(f"Predicted Stock Closing Price on {date.strftime('%Y-%m-%d')}: ${prediction:.2f}")
+
+        # Display summary of the input features
+        st.write("### Summary of Input Features:")
+        st.write({
+            'Daily Return': daily_return,
+            '20-Day MA': moving_avg_20,
+            '50-Day MA': moving_avg_50,
+            'Volume': volume,
+            'EMA 50': ema_50,
+            'RSI': rsi,
+            'Bollinger High': bollinger_high,
+            'Bollinger Low': bollinger_low
+        })
+    else:
+        st.info("Please fill in the stock features and click 'Predict Stock Price'")
+
+    # Footer Disclaimer
+    st.write("""
+    #### Disclaimer:
+    This is a demo app for educational purposes only and should not be used for actual financial decision-making.
+    """)
+
+# Run the main function
+if __name__ == '__main__':
+    main()
