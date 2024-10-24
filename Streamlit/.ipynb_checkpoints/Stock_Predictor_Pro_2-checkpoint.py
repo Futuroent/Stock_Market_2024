@@ -1,81 +1,141 @@
 import streamlit as st
-import joblib
+import yfinance as yf
+import pandas as pd
+import plotly.graph_objects as go
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
+from datetime import date, timedelta
+import requests
 import numpy as np
-from datetime import datetime
-from sklearn.preprocessing import MinMaxScaler
 
-# Load the trained Ridge model and the correct scaler
-ridge_model_path = '../models/linear_regression_model.pkl'  # Update the path if necessary
-scaler_path = '../models/standard_scaler.pkl'  # Ensure this path points to the correct scaler file
+# Set project name and layout
+st.set_page_config(page_title="Futuro Stock App", layout="wide")
 
-# Load the Ridge model and stock scaler
-ridge_model = joblib.load(ridge_model_path)
+# Load stock data (with caching)
+@st.cache_data
+def load_data(symbol):
+    stock_data = yf.download(symbol, start='2020-01-01', end='2024-01-01')
+    stock_data.reset_index(inplace=True)
+    return stock_data
 
-# If your stock_scaler was trained for 4 features, load it (adjust accordingly)
-stock_scaler = joblib.load(scaler_path)
+# Sidebar navigation
+selected_menu = st.sidebar.selectbox("Select a Page", ["Home", "Visualization", "Prediction", "Trade News", "Prediction App"], index=0)
 
-# Function to make stock price predictions using Ridge
-def predict_stock_ridge(features):
-    # Scale the input features (only use 4 features, the ones expected by the model)
-    features_to_use = features[:4]  # Assuming the first 4 features are used by Ridge
-    features_scaled = stock_scaler.transform([features_to_use])
+# Stock selection
+stock_symbol = st.sidebar.selectbox("Choose Stock Symbol", options=["AAPL", "GOOGL", "AMZN", "MSFT"])
 
-    # Predict using the Ridge model
-    prediction = ridge_model.predict(features_scaled)
+# Load stock data globally
+stock_data = load_data(stock_symbol)
 
-    # Return the predicted value
-    return prediction[0]
+# 1. Home Page
+if selected_menu == "Home":
+    st.title("Welcome to Futuro Stock App!")
+    st.write("This app provides stock analysis and predictions for various companies.")
 
-# Streamlit app layout
-st.title('📈 Stock Price Predictor Pro (Ridge Model)')
-
-st.write("""
-### Predict the stock closing price using the trained Ridge regression model.
-Enter the relevant stock market data below to get predictions:
-""")
-
-# Date selection for stock prediction
-date = st.date_input("Select the date for prediction", datetime.today())
-st.write(f"Selected Date: {date.strftime('%Y-%m-%d')}")
-
-# Input fields for stock features
-daily_return = st.slider('Daily Return', min_value=-1.0, max_value=1.0, step=0.01, value=0.0)
-moving_avg_20 = st.slider('20-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-moving_avg_50 = st.slider('50-Day Moving Average', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-volume = st.number_input('Volume', min_value=0, value=1000000, step=10000)
-ema_50 = st.slider('EMA 50', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-rsi = st.slider('RSI (Relative Strength Index)', min_value=0.0, max_value=100.0, step=1.0, value=50.0)
-bollinger_high = st.slider('Bollinger High', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-bollinger_low = st.slider('Bollinger Low', min_value=0.0, max_value=1000.0, step=1.0, value=500.0)
-
-# Collect all input features
-input_features = [daily_return, moving_avg_20, moving_avg_50, volume, ema_50, rsi, bollinger_high, bollinger_low]
-
-# Add some space
-st.write("---")
-
-# Predict button with interactivity
-if st.button('📊 Predict Stock Price'):
-    prediction = predict_stock_ridge(input_features)
-    st.success(f"Predicted Stock Closing Price on {date.strftime('%Y-%m-%d')}: ${prediction:.2f}")
+# 2. Stock Data Visualization
+if selected_menu == "Visualization":
+    st.title(f"{stock_symbol} Stock Data Visualization")
     
-    # Display input features
-    st.write(f"### Summary of input features:")
-    st.write({
-        'Daily Return': daily_return,
-        '20-Day MA': moving_avg_20,
-        '50-Day MA': moving_avg_50,
-        'Volume': volume,
-        'EMA 50': ema_50,
-        'RSI': rsi,
-        'Bollinger High': bollinger_high,
-        'Bollinger Low': bollinger_low
-    })
-else:
-    st.info("Please fill in the stock features and click 'Predict Stock Price'")
+    # Adjusted Close Price Over Time
+    st.subheader("Adjusted Close Price Over Time")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=stock_data['Date'], y=stock_data['Adj Close'], mode='lines', name='Adj Close'))
+    fig.update_layout(title=f"{stock_symbol} Adjusted Close Price Over Time",
+                      xaxis_title="Date", yaxis_title="Adjusted Close Price (USD)")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Adding a footer
-st.write("""
-#### Disclaimer:
-This is a demo app for educational purposes only and should not be used for actual financial decision-making.
-""")
+    # Volume Over Time
+    st.subheader("Trading Volume Over Time")
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=stock_data['Date'], y=stock_data['Volume'], name='Volume'))
+    fig.update_layout(title=f"{stock_symbol} Trading Volume Over Time",
+                      xaxis_title="Date", yaxis_title="Volume")
+    st.plotly_chart(fig, use_container_width=True)
+
+# 3. Stock Price Prediction
+if selected_menu == "Prediction":
+    st.title(f"{stock_symbol} Stock Price Prediction")
+
+    # Prepare the data
+    X = stock_data[['Open', 'High', 'Low', 'Volume']]
+    y = stock_data['Adj Close']
+    
+    # Scale the features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    # Train-test split
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, shuffle=False)
+    
+    # Train the model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    
+    # Make predictions
+    y_pred = model.predict(X_test)
+
+    # Interactive Plotly Visualization of predictions
+    st.subheader("Prediction vs Real Data")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=stock_data['Date'].iloc[-len(y_test):], y=y_test, mode='lines', name='Real Data', line=dict(color='blue')))
+    fig.add_trace(go.Scatter(x=stock_data['Date'].iloc[-len(y_test):], y=y_pred, mode='lines', name='Predicted Data', line=dict(color='red')))
+    fig.update_layout(title=f"{stock_symbol} Stock Price: Real vs Predicted",
+                      xaxis_title="Date", yaxis_title="Price (USD)")
+    st.plotly_chart(fig, use_container_width=True)
+
+# 4. Trade News Section (Interactive)
+if selected_menu == "Trade News":
+    st.title(f"Trade News for {stock_symbol} Inc.")
+    
+    st.write("## Latest Trade-Related News")
+
+    # Placeholder for live trade-related news articles
+    news_articles = [
+        {"title": "Apple Stock Hits All-Time High", "url": "https://www.apple.com", "date": "2023-10-17"},
+        {"title": "Apple Announces Stock Buyback", "url": "https://www.apple.com", "date": "2023-10-16"},
+        {"title": "Google Surpasses Expectations in Earnings", "url": "https://www.google.com", "date": "2023-10-15"},
+        {"title": "Amazon Acquires New AI Stock", "url": "https://www.amazon.com", "date": "2023-10-14"},
+        {"title": "Microsoft Releases New Stock Options", "url": "https://www.microsoft.com", "date": "2023-10-13"},
+        {"title": "Tesla Sees Huge Jump in Stock After AI Investment", "url": "https://www.tesla.com", "date": "2023-10-12"}
+    ]
+
+    # Displaying the trade-related news with clickable links
+    for article in news_articles:
+        st.markdown(f"**[{article['title']}]({article['url']})** \nPublished on: {article['date']}")
+
+# 5. Stock Prediction App (Improved Date Handling)
+if selected_menu == "Prediction App":
+    st.title(f"Futuro {stock_symbol} Stock Prediction App")
+    
+    # Input for future date
+    future_date = st.date_input("Select a future date for prediction:", value=date.today() + timedelta(days=30), min_value=date.today())
+
+    # Calculate days into the future (fixed date type error)
+    future_days = (future_date - stock_data['Date'].max().date()).days
+    
+    # Ensure the model is trained
+    if 'model' not in st.session_state:
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, shuffle=False)
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+        st.session_state['model'] = model
+    else:
+        model = st.session_state['model']
+    
+    # Predict future price (adjust the prediction logic)
+    if future_days > 0:
+        trend = np.mean(np.diff(stock_data['Adj Close'][-5:]))  # Get recent trend
+        future_price = stock_data['Adj Close'].iloc[-1] + (trend * future_days)
+        st.write(f"Predicted Price for {stock_symbol} on {future_date}: **${future_price:.2f}**")
+    else:
+        st.write("Please select a valid future date for prediction.")
+    
+    # Display chart showing historical and predicted data
+    st.subheader(f"Price Trend with Predicted Data for {future_date}")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=stock_data['Date'], y=stock_data['Adj Close'], mode='lines', name='Real Data'))
+    fig.add_trace(go.Scatter(x=[future_date], y=[future_price], mode='markers', marker=dict(size=10, color='red'), name='Predicted Price'))
+    fig.update_layout(title=f"{stock_symbol} Real Data and Predicted Price for {future_date}",
+                      xaxis_title="Date", yaxis_title="Price (USD)")
+    st.plotly_chart(fig, use_container_width=True)
